@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:avaloniaappwritetrae20260119.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="avaloniaappwritetrae20260119.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Subscription Manager"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto, *">
+            <!-- Header / Toolbar -->
+            <Grid Grid.Row="0" Margin="20, 40, 20, 20" ColumnDefinitions="Auto, *, Auto">
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <TextBlock Text="Subscriptions" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <Button Command="{Binding LoadSubscriptionsCommand}" Content="Refresh"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="20">
+                     <CheckBox Name="AutoStartCheckBox" Content="Run on Startup" 
+                               Checked="AutoStart_OnCheckChanged" 
+                               Unchecked="AutoStart_OnCheckChanged"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- List -->
+            <ScrollViewer Grid.Row="1" Margin="20">
+                <ItemsControl ItemsSource="{Binding Subscriptions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,10" Padding="15" CornerRadius="8" Background="#25FFFFFF" BoxShadow="0 2 10 0 #20000000">
+                                <Grid ColumnDefinitions="2*, 2*, 1*, 1.5*, 2*">
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                                        <TextBlock Text="{Binding Account}" FontSize="12" Opacity="0.7"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding Site}" VerticalAlignment="Center" Margin="10,0" TextTrimming="CharacterEllipsis"/>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat='{}{0:C0}'}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Foreground="#4CC2FF"/>
+
+                                    <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0">
+                                        <TextBlock Text="Next Bill:" FontSize="10" Opacity="0.7"/>
+                                        <TextBlock Text="{Binding NextDate, StringFormat='{}{0:yyyy-MM-dd}'}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="4" Text="{Binding Note}" VerticalAlignment="Center" Margin="10,0" TextWrapping="Wrap" Opacity="0.8" FontStyle="Italic"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
+            <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="{Binding IsLoading}" VerticalAlignment="Top" Height="2"/>
+        </Grid>
+    </Panel>
+
+</Window>
