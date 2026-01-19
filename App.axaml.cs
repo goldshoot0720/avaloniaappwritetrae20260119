@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -33,9 +34,10 @@ namespace avaloniaappwritetrae20260119
 
                 if (desktop.Args != null && desktop.Args.Contains("--autostart"))
                 {
-                    // Start minimized and without stealing focus
+                    // Start minimized to tray
                     mainWindow.WindowState = Avalonia.Controls.WindowState.Minimized;
-                    mainWindow.ShowActivated = false;
+                    mainWindow.ShowInTaskbar = false;
+                    mainWindow.IsVisible = false;
                 }
             }
 
@@ -52,6 +54,40 @@ namespace avaloniaappwritetrae20260119
             foreach (var plugin in dataValidationPluginsToRemove)
             {
                 BindingPlugins.DataValidators.Remove(plugin);
+            }
+        }
+
+        private void TrayIcon_Clicked(object? sender, EventArgs e)
+        {
+            ShowMainWindow();
+        }
+
+        private void OpenFromTray_Click(object? sender, EventArgs e)
+        {
+            ShowMainWindow();
+        }
+
+        private void ExitFromTray_Click(object? sender, EventArgs e)
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                desktop.Shutdown();
+            }
+        }
+
+        private void ShowMainWindow()
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var window = desktop.MainWindow;
+                if (window != null)
+                {
+                    window.Show();
+                    window.WindowState = Avalonia.Controls.WindowState.Normal;
+                    window.ShowInTaskbar = true;
+                    window.Activate();
+                    window.IsVisible = true;
+                }
             }
         }
     }
