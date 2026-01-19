@@ -33,8 +33,9 @@ namespace avaloniaappwritetrae20260119
 
                 if (desktop.Args != null && desktop.Args.Contains("--autostart"))
                 {
-                    // Start minimized
+                    // Start minimized and without stealing focus
                     mainWindow.WindowState = Avalonia.Controls.WindowState.Minimized;
+                    mainWindow.ShowActivated = false;
                 }
             }
 
